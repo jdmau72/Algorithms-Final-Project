@@ -1,5 +1,6 @@
 import math
 import random
+from ObjectiveFunctions import *
 
 class Firefly:
     def __init__(self, index, position, dim=2, lower=-10, upper=10):
@@ -36,7 +37,10 @@ class Firefly:
         # print(self.position)
         
         # self.fitness = ((x1**2) + (x2**2))
-        self.fitness = self.boothFunction(x1, x2)
+        self.fitness = objective(x1, x2)
+        # self.fitness = bukinFunction(x1, x2)
+        # self.fitness = matyasFunction(x1, x2)
+        # self.fitness = schafferFunction(x1, x2)
         
         return self.fitness
     
@@ -44,16 +48,16 @@ class Firefly:
     def getFitness(self):
         return self.fitness
     
-    def move(self, other, attractiveness, stepSize):
+    def move(self, other, attractiveness, alpha):
         # for dim in range(self.dim):
         #     self.position[dim] = self.position[dim] + attractiveness * (other.getPosition()[dim] - self.position[dim]) + stepSize
-        self.position = self.position + attractiveness * (other.getPosition() - self.position) + stepSize
+        self.position = self.position + attractiveness * (other.getPosition() - self.position) + alpha * (random.random()-0.5)
         self.checkBoundary()
             
-    def moveRandom(self, stepSize):
+    def moveRandom(self, alpha):
         # for dim in range(self.dim):
         #     self.position[dim] = self.position[dim] + stepSize
-        self.position = self.position + stepSize
+        self.position = self.position + (alpha * (random.random()-0.5))
         
     def checkBoundary(self):
         for dim in range(self.dim):
@@ -66,8 +70,6 @@ class Firefly:
             
     
     
-    def boothFunction(self, x, y):
-        return ((x + 2*y -7)**2 + (2*x + y - 5)**2)
         
         
     

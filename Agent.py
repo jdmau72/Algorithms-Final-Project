@@ -1,5 +1,6 @@
 import math
 import random
+from ObjectiveFunctions import *
 
 class Agent:
     def __init__(self, index, position, fitness=0, M=0, m=0, dim=1):
@@ -18,9 +19,9 @@ class Agent:
             self.F.append(0)
             self.a.append(0)
             self.v.append(0)
-        print(self.forces)
-        print(self.F)
-        print(self.a)
+        # print(self.forces)
+        # print(self.F)
+        # print(self.a)
         
         
     def __str__(self):
@@ -30,10 +31,13 @@ class Agent:
     def evalFitness(self):
         x1 = self.position[0]
         x2 = self.position[1]
-        print(self.position)
+        # print(self.position)
         
         # self.fitness = ((x1**2) + (x2**2))
-        self.fitness = self.boothFunction(x1, x2)
+        self.fitness = objective(x1, x2)
+        # self.fitness = bukinFunction(x1, x2)
+        # self.fitness = matyasFunction(x1, x2)
+        # self.fitness = schafferFunction(x1, x2)
         
         return self.fitness
     
@@ -93,5 +97,3 @@ class Agent:
             # print(f"    New x_{dim+1}: {self.position[dim]}")
             
             
-    def boothFunction(self, x, y):
-        return ((x + 2*y -7)**2 + (2*x + y - 5)**2)

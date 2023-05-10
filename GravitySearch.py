@@ -3,7 +3,9 @@ import math
 from Agent import Agent
 import matplotlib.pyplot as plt
 import time
-
+from ObjectiveFunctions import *
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 
@@ -17,6 +19,7 @@ G_0 = 6.8     # based on recommended 2018 value for G
 ALPHA = -25
 EPSILON = 0.5
 T = 50    # max number of iterations
+# T = 10
 DIMENSIONS = 2
 
 
@@ -52,11 +55,12 @@ agentsList = []
 t = 1       # this iteration
 plt.xlim(INIT_RANGE_MIN, INIT_RANGE_MAX)
 plt.ylim(INIT_RANGE_MIN, INIT_RANGE_MAX)
+plt.suptitle('Gravity Search Algorithm')
 
 
 # Step 1
 # Generate initial population
-print("\nStep 1")
+# print("\nStep 1")
 for i in range(NUM_AGENTS):
     x1_i = random.randrange(INIT_RANGE_MIN, INIT_RANGE_MAX)
     x2_i = random.randrange(INIT_RANGE_MIN, INIT_RANGE_MAX)
@@ -64,13 +68,13 @@ for i in range(NUM_AGENTS):
     agentsList.append(Agent(i, [x1_i, x2_i], dim=DIMENSIONS))
     agentsList[i].evalFitness()
     
-print(agentsList)
+# print(agentsList)
 if (IS_MIN_OPT):
         best = findMin(agentsList)
 else:
         best = findMax(agentsList)
         
-print(f"Original Best at {best.getPosition()}: {best.getFitness()}")
+# print(f"Original Best at {best.getPosition()}: {best.getFitness()}")
 
 
 # for testing use the examples provided by the paper
@@ -82,10 +86,15 @@ print(f"Original Best at {best.getPosition()}: {best.getFitness()}")
 # ------------------------------------------------------------------------- 
 
 while (t != T):
+    
+    plt.clf()
+    plt.xlim(INIT_RANGE_MIN, INIT_RANGE_MAX)
+    plt.ylim(INIT_RANGE_MIN, INIT_RANGE_MAX)
+    plt.suptitle('Gravity Search Algorithm')
 
     # Step 2
     # Evaluate fitness for each agent
-    print("\nStep 2")
+    # print("\nStep 2")
     for agent in agentsList:
         agent.evalFitness()
         # print(f"Fitness of Agent ({agent}):  {agent.evalFitness()}")
@@ -192,14 +201,28 @@ while (t != T):
         plt.plot(agent.getPosition()[0], agent.getPosition()[1], 'o', color='black')
     plt.draw()
     plt.pause(0.00001)
-    plt.clf()
     
-    plt.xlim(INIT_RANGE_MIN, INIT_RANGE_MAX)
-    plt.ylim(INIT_RANGE_MIN, INIT_RANGE_MAX)
+    
+    
         
     t += 1
     
     
+# # define range for input
+r_min, r_max = INIT_RANGE_MIN, INIT_RANGE_MAX
+# # sample input range uniformly at 0.1 increments
+xaxis = np.arange(r_min, r_max, 0.1)
+yaxis = np.arange(r_min, r_max, 0.1)
+# # create a mesh from the axis
+x, y = np.meshgrid(xaxis, yaxis)
+# # compute targets
+results = objective(x, y)
+# # create a filled contour plot with 50 levels and jet color scheme
+plt.contourf(x, y, results, levels=50, cmap='jet')
+plt.figtext(0.5, 0.03, f"Experimental OPT: {best.getFitness()}", ha="center", fontsize=7)
+plt.figtext(0.5, 0.01, f"True OPT: {0}", ha="center", fontsize=7)
+
+plt.savefig(f'GSA {OBJECTIVE_FUNCTION}_.png')
         
 
 # should have OPT now
